@@ -1,0 +1,11 @@
+HOST,State,Telnet,Brand,Credentials,Failover,Connected,Model,Serial,Time
+
+192.168.0.2,UP,Open,Cisco,AD Password,,YES,C867VAE-K9,Serial1,2018/10/21 - 19:04:47
+192.168.0.6,UP,Open,Cisco,password1,,YES,C867VAE-K9,Serial2,2018/10/21 - 19:04:50
+192.168.0.10,UP,Refused,,,,,,,2018/10/21 - 19:04:52
+192.168.0.14,UP,Open,Cisco,password4,,YES,CISCO867VAE-K9,Serial3,2018/10/21 - 19:04:55
+192.168.0.18,DOWN,,,,,,,,2018/10/21 - 19:05:00
+192.168.0.19,UP,Open,Cisco,failoverpassword2,YES,YES,CISCO867VAE,Serial4,2018/10/21 - 19:05:02
+192.168.0.20,UP,Open,NOT Cisco,,,,,,2018/10/21 - 19:05:04
+192.168.0.21,UP,Open,Cisco,,YES,NO,,,2018/10/21 - 19:05:13
+192.168.0.22,UP,Open,Cisco,password5,,YES,CISCO867VAE-K9,Serial5,2018/10/21 - 19:05:14
