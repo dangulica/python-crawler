@@ -10,22 +10,25 @@ try:
         except PermissionError:
             print('No permission to access iplist.txt')
             sys.exit()
+        setIP = set()
         for line in inputFile:
             if line.strip('\n') != '':
                 try:
                     ipNet = ipaddress.IPv4Network(line.strip('\n'))
-                    try:
-                        with open('iplist.txt', 'a') as resultFile:
-                            if ipNet.num_addresses == 1:
-                                resultFile.write(str(ipNet[0]) + '\n')
-                            else:
-                                for i in range(2, ipNet.num_addresses - 1):
-                                    resultFile.write(str(ipNet[i]) + '\n')
-                    except PermissionError:
-                        print('No permission to access iplist.txt')
-                        sys.exit()
+                    if ipNet.num_addresses == 1:
+                        setIP.add(ipNet[0])
+                    else:
+                        for index in range(2, ipNet.num_addresses - 1):
+                            setIP.add(ipNet[index])
                 except ValueError:
                     print(line.strip('\n'), 'is not a valid IPv4Network')
+        try:
+            with open('iplist.txt', 'a') as resultFile:
+                for ipAddr in sorted(setIP):
+                    resultFile.write(str(ipAddr) + '\n')
+        except PermissionError:
+            print('No permission to access iplist.txt')
+            sys.exit()
     print('\nDone!')
 except PermissionError:
     print('No permission to access input.txt')

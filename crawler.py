@@ -69,6 +69,15 @@ def telnetVerify(ipaddress, port=23):
     except ConnectionRefusedError:
         connected = False
         answer = 'Refused'
+    except ConnectionResetError:
+        connected = False
+        answer = 'Reset'
+    except ConnectionAbortedError:
+        connected = False
+        answer = 'Aborted'
+    except ConnectionError:
+        connected = False
+        answer = 'Error'
     except socket.timeout:
         connected = False
         answer = 'Timeout'
@@ -84,10 +93,14 @@ def telnetVerify(ipaddress, port=23):
 
 def ciscoVerify(ipaddress):
     outputcisco = 'User Access Verification\r\n\r\nUsername:'
-    with telnetlib.Telnet(ipaddress, '23') as tn:
-        time.sleep(0.1)
-        output = tn.read_very_eager().decode('utf-8')
-    result, answer = ((True, 'Cisco') if outputcisco in output else (False, "NOT Cisco"))
+    try:
+        with telnetlib.Telnet(ipaddress, '23') as tn:
+            time.sleep(0.5)
+            output = tn.read_very_eager().decode('utf-8')
+            result, answer = ((True, 'Cisco') if outputcisco in output else (False, "NOT Cisco"))
+    except (ConnectionResetError, ConnectionError, ConnectionAbortedError, ConnectionRefusedError,
+            EOFError, TimeoutError, BrokenPipeError):
+        result, answer = (False, 'NOT Cisco')
     print('Brand', answer, end=', ')
     return (result, answer)
 
@@ -157,9 +170,9 @@ def loginVerify(ipaddress, userAD, passAD):
         except TimeoutError:
             connected = False
             print('error')
-        except ConnectionRefusedError:
+        except (ConnectionResetError, ConnectionError, ConnectionAbortedError, ConnectionRefusedError):
             connected = False
-            print('refused')
+            print('ConnectionError')
         except EOFError:
             connected = False
             print('EOFError')
@@ -215,6 +228,10 @@ def getModelSerialNumber(ipaddress, userName, passWord, needsFailover):
         print('BrokenPipe')
         logSerialNumber = 'BrokenPipe'
         logModel = 'BrokenPipe'
+    except (ConnectionResetError, ConnectionError, ConnectionAbortedError, ConnectionRefusedError,
+            EOFError, TimeoutError, BrokenPipeError):
+        logSerialNumber = 'ConnectionError'
+        logModel = 'ConnectionError'
     print('Serial', logSerialNumber, end=', ')
     print('Model', logModel, end=' ')
     return logModel, logSerialNumber
